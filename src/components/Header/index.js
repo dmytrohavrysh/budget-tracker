@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import styles from './Header.module.css';
+import ThemeSwitcher from '../ThemeSwitcher';
 
 const Header = () => {
     return (
@@ -15,7 +16,8 @@ const Header = () => {
                         </li>
                     </ul>
                 </nav>
-                <button className={styles.user}>User</button>
+                {/* <button className={styles.user}>User</button> */}
+                <ThemeSwitcher />
             </div>
         </header>
     );

@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import ReactModal from 'react-modal';
 import styles from './AddTransactionModal.module.css';
-
-import { collection, doc, getDocs, addDoc } from "firebase/firestore";
-import {firestore} from "../../firebase";
+import { CategoriesContext } from '../../providers/context/Categories';
+import { CurrenciesContext } from '../../providers/context/Currencies';
+import { TransactionsContext } from '../../providers/context/Transactions';
 
 const formatDate = (date) => {
     const d = new Date(date);
@@ -12,75 +12,30 @@ const formatDate = (date) => {
     let day = d.getDate();
     day = day < 10 ? '0' + day : day;
     const year = d.getFullYear();
-    return `${year}-${month}-${day}`;
+    let hours = d.getHours();
+    hours = hours < 10 ? '0' + hours : hours;
+    let minutes = d.getMinutes();
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
 }
 
-const AddTransactionModal = ({isOpen, setModal}) => {
-    const [categories, setCategories] = useState([]);
-    const [currencies, setCurrencies] = useState([]);
+const AddTransactionModal = ({isOpen, setModal}) => {    
+    const {transactionsState, dispatchTransactions} = useContext(TransactionsContext);
+    const {categoriesState, dispatchCategories} = useContext(CategoriesContext);
+    const {currenciesState, dispatchCurrencies} = useContext(CurrenciesContext);
     const [formData, setFormData] = useState({
         type: 'expense',
-        sum: '0.01',
-        from: '',
-        category: '',
-        currency: '',
-        date: formatDate(new Date())
+        category: categoriesState.length > 0 ? categoriesState[0].name: '',
+        sum: 0.01,
+        currency: currenciesState.length > 0 ? currenciesState[0].name: '',
+        from: 'Me',
+        date: new Date()
     });
-    
-    
-    // Disable the content when the modal is open
-    useEffect(() => {
-        ReactModal.setAppElement('#root');
-    }, []);
-    // Get the categories from the database
-    useEffect(() => {
-        (async () => {
-            let categoriesSnapshot;
-            try{
-                categoriesSnapshot = await getDocs(collection(firestore, "categories"));
-            } catch (error) {
-                console.log('Error getting categories: ', error);
-                return;
-            }
-            const cats = [];
-            categoriesSnapshot.forEach(async doc => {
-                cats.push({name: doc.data().name, id: doc.id});
-            })
-            setCategories(cats);
-            setFormData({...formData, category: cats.length > 0 ? cats[0].id : ''});
-        })();
-    }, categories);
-    // Get the currencies from the database
-    useEffect(() => {
-        (async () => {
-            let currenciesSnapshot;
-            try {
-                currenciesSnapshot = await getDocs(collection(firestore, "currencies"));
-            } catch (error) {
-                console.log('Error getting currencies: ', error);
-                return;
-            }
-            const curs = [];
-            currenciesSnapshot.forEach(async doc => {
-                curs.push({data: doc.data(), id: doc.id});
-            })
-            setCurrencies(curs);
-            setFormData({...formData, currency: curs.length > 0 ? curs[0].id : ''});
-        })();
-    }, categories);
+   
 
     const addTransaction = async (e) => {
         e.preventDefault();
-        const categoryRef = doc(firestore, 'categories', formData.category);
-        const currencyRef = doc(firestore, 'currencies', formData.currency);
-        const transaction = {
-            sum: formData.type === 'income' ? parseFloat(formData.sum) : -parseFloat(formData.sum),
-            category: categoryRef,
-            currency: currencyRef,
-            from: formData.from,
-            date: new Date(formData.date)
-        }
-        await addDoc(collection(firestore,  'transactions'), transaction);
+        dispatchTransactions({type: 'addTransaction', payload: {...formData}});
         setModal(false);
     }
 
@@ -117,14 +72,14 @@ const AddTransactionModal = ({isOpen, setModal}) => {
                 </label>
                 <label className={styles.label}>
                     <span className={styles.title}>Category:</span>
-                    <select className={`${styles.control} ${styles.select}`} value={formData.category} name="category" onChange={changeData}>
-                        {categories.map((category, i) => <option key={i} value={category.id}>{category.name}</option>)}
+                    <select className={`${styles.control} ${styles.select}`} name="category" onChange={changeData}>
+                        {categoriesState.map((category, i) => <option key={i} value={category.id}>{category.name}</option>)}
                     </select>
                 </label>
                 <label className={styles.label}>
                     <span className={styles.title}>Currency:</span>
-                    <select className={styles.control} value={formData.currency} name="currency" onChange={changeData}>
-                        {currencies.map((currency, i) => <option key={i} value={`${currency.id}`}>{`${currency.data.symbol}  ${currency.data.name}`}</option>)}
+                    <select className={styles.control} name="currency" onChange={changeData}>
+                        {currenciesState.map((currency, i) => <option key={i} value={`${currency.id}`}>{`${currency.symbol}  ${currency.name}`}</option>)}
                     </select>
                 </label>
                 <label className={styles.label}>
@@ -133,7 +88,7 @@ const AddTransactionModal = ({isOpen, setModal}) => {
                 </label>
                 <label className={styles.label}>
                     <span className={styles.title}>Date:</span>
-                    <input type="date" className={styles.control} value={formData.date} onChange={changeData} name="date" />
+                    <input type="datetime-local" className={styles.control} value={formatDate(formData.date)} onChange={changeData} name="date"/>
                 </label>
                 <div className={styles.btnGroup}>
                     <button className={`${styles.btn} ${styles.closeBtn}`} onClick={close}>Cancel</button>

@@ -1,30 +1,32 @@
 @font-face {
-    font-family: 'PT Sans';
-    src: url('./fonts/PTSans-Regular.woff2') format('woff2'),
-        url('./fonts/PTSans-Regular.woff') format('woff'),
-        url('./fonts/PTSans-Regular.ttf') format('true-type');
+    font-family: 'Lato';
+    src: url('./fonts/Lato-Regular.woff2') format('woff2'),
+        url('./fonts/Lato-Regular.woff') format('woff');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
 }
 
 @font-face {
-    font-family: 'PT Sans';
-    src: url('./fonts/PTSans-Bold.woff2') format('woff2'),
-        url('./fonts/PTSans-Bold.woff') format('woff'),
-        url('./fonts/PTSans-Bold.ttf') format('true-type');
+    font-family: 'Lato';
+    src: url('./fonts/Lato-Bold.woff2') format('woff2'),
+        url('./fonts/Lato-Bold.woff') format('woff');
     font-weight: bold;
     font-style: normal;
     font-display: swap;
 }
+@font-face {
+    font-family: 'Lato';
+    src: url('./fonts/Lato-Medium.woff2') format('woff2'),
+        url('./fonts/Lato-Medium.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
 
-html, body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-b, u, i, center,
-dl, dt, dd, ol, ul, li,
+html, body, div, span, 
+h1, h2, h3, h4, h5, h6, p, 
+a,  ul, li,
 fieldset, form, label, legend,
 table, caption, tbody, tfoot, thead, tr, th, td,
 article, aside, canvas, details, embed,
@@ -40,15 +42,19 @@ time, mark, audio, video {
 }
 
 html {
-    font-family: 'PT Sans', Arial, Helvetica, sans-serif;
-    font-size: 1.25rem;
+    font-family: 'Lato', Arial, Helvetica, sans-serif;
+    font-size: 1.125rem;
+}
+body {
+    background-color: var(--bg-color);
+    color: var(--text-primary);
 }
 ul {
     list-style: none;
 }
 a {
     text-decoration: none;
-    color: #fff;
+    color: var(--text-secondary);
 }
 .wrapper {
     width: 60%;
@@ -56,14 +62,18 @@ a {
     margin-right: auto;
 }
 
-:root {
-    --white: #fff;
-    --light-green: #1abc9c;
-    --dark-green: #27ae60;
-    --light-blue: #3498db;
-    --dark-blue: #2980b9;
-    --light-red: #e74c3c;
-    --dark-red: #c0392b;
-    --light-purple: #9b59b6;
-    --dark-purple: #8e44ad;
+button {
+    color: inherit
 }
+button:hover {
+    cursor: pointer;
+}
+.visually-hidden {
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+  }

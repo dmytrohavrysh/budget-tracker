@@ -1,0 +1,41 @@
+.changeDate {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    font-size: 1.25rem;
+    margin-bottom: 20px;
+}
+.changeDate::after {
+    content: '.';
+    font-size: 0;
+    overflow: hidden;
+    width: 100%;
+    margin: 20px 0;
+    border-bottom: 4px solid var(--border);
+}
+.legend {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+.label {
+    margin-right: 15px;
+}
+.select {
+    margin-right: 25px;
+    padding: 5px 2px;
+    font-size: 1rem;
+    border-radius: 4px;
+}
+.okBtn {
+    display: block;
+    background-color: var(--button-color);
+    color: var(--button-text-color);
+    border: none;
+    border-radius: 0.5rem;
+    padding: 8px 15px;
+    font-size: 1rem;
+    transition: background-color 0.3s ease-in-out;
+}
+.okBtn:hover {
+    background-color: var(--button-hover-color);
+}

@@ -1,11 +1,11 @@
 import Transactions from '../../components/Transactions';
 import ErrorBoundary from '../../components/ErrorBoundary';
 
-const Home = ({transactions}) => {
+const Home = () => {
 
     return (
         <ErrorBoundary>
-            <Transactions transactions={transactions}/>
+            <Transactions />
         </ErrorBoundary>
     )
 }

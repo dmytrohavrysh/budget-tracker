@@ -1,0 +1,56 @@
+.themes {
+    position: relative;
+    display: flex;
+    gap: 5px
+}
+.themes__item {
+    position: relative;
+    z-index: 2;
+    color: var(--indicator-text-color);
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position-x: 5px;
+    background-position-y: center;
+    background-size: 30px;
+    filter: invert(1);
+    border: none;
+    border-radius: 10px;
+    font-size: 0.875rem;
+    padding: 10px;
+    padding-left: 40px;
+    outline: none;
+    cursor: pointer;
+    transition: filter 0.3s ease-in-out;
+}
+.themes__item__light {
+    background-image: url(./assets/sun.svg);
+}
+.themes__item__light.themes__item__active ~ .indicator {
+    left: 0;
+}
+.themes__item__auto {
+    background-image: url(./assets/eclipse.svg);
+}
+.themes__item__auto.themes__item__active ~ .indicator {
+    left: 50%;
+    transform: translateX(-50%);
+}
+.themes__item__dark {
+    background-image: url(./assets/moon.svg);
+}
+.themes__item__dark.themes__item__active ~ .indicator {
+    left: 100%;
+    transform: translateX(-100%);
+}
+.themes__item__active {
+    filter: invert(0);
+}
+.indicator {
+    position: absolute;
+    height: 100%;
+    width: 33.33%;
+    background-color: var(--indicator-color);
+    border-radius: 10px;
+    z-index: 1;
+    transition: left 0.3s ease-in-out, transform 0.3s ease-in-out;
+}

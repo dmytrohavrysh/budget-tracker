@@ -1,6 +1,6 @@
 .header {
     height: 80px;
-    background-color: #4834d4;
+    background-color: var(--window-color);
     margin-bottom: 50px;
 }
 .menu {

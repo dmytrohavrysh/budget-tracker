@@ -1,0 +1,16 @@
+:root {
+    --bg-color: #fff;
+    --text-primary: #000;
+    --text-secondary: #fff;
+    --border: #ccc;
+    --success: #27ae60;
+    --error: #e74c3c;
+    --category-color: #2196F3;
+    --window-color: #6200ee;
+    --button-text-color: #fff;
+    --button-color: #6200ee;
+    --button-hover-color: #883df2;
+    --transaction-color: #f5f5f5;
+    --indicator-color: #fff;
+    --indicator-text-color: #000;
+}
