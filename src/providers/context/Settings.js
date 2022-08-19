@@ -1,5 +1,4 @@
-import { createContext, useEffect, useReducer } from "react";
-import { changeRemoteDate } from "../services/Storage";
+import { createContext, useEffect } from "react";
 import useAsyncReducer from "../../hooks/useAsyncReducer";
 
 const SettingsContext = createContext([]);
@@ -22,9 +21,7 @@ const reducer = (oldState, action) => {
                     break;
                 }
             }
-            case 'changeDate':
-                changeRemoteDate(action.payload).then((data) => resolve(data));
-                break;
+            
             default: resolve(oldState);
         }
     });

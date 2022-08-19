@@ -1,7 +1,7 @@
 @font-face {
     font-family: 'Lato';
     src: url('./fonts/Lato-Regular.woff2') format('woff2'),
-        url('./fonts/Lato-Regular.woff') format('woff');
+    url('./fonts/Lato-Regular.woff') format('woff');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
@@ -10,7 +10,7 @@
 @font-face {
     font-family: 'Lato';
     src: url('./fonts/Lato-Bold.woff2') format('woff2'),
-        url('./fonts/Lato-Bold.woff') format('woff');
+    url('./fonts/Lato-Bold.woff') format('woff');
     font-weight: bold;
     font-style: normal;
     font-display: swap;
@@ -18,7 +18,7 @@
 @font-face {
     font-family: 'Lato';
     src: url('./fonts/Lato-Medium.woff2') format('woff2'),
-        url('./fonts/Lato-Medium.woff') format('woff');
+    url('./fonts/Lato-Medium.woff') format('woff');
     font-weight: 500;
     font-style: normal;
     font-display: swap;
@@ -33,17 +33,17 @@ article, aside, canvas, details, embed,
 figure, figcaption, footer, header, hgroup,
 menu, nav, output, ruby, section, summary,
 time, mark, audio, video {
-  margin: 0;
-	padding: 0;
-	border: 0;
-	font-size: 100%;
-	font: inherit;
-	vertical-align: baseline;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
 }
 
 html {
     font-family: 'Lato', Arial, Helvetica, sans-serif;
-    font-size: 1.125rem;
+    font-size: 1rem;
 }
 body {
     background-color: var(--bg-color);
@@ -57,9 +57,7 @@ a {
     color: var(--text-secondary);
 }
 .wrapper {
-    width: 60%;
-    margin-left: auto;
-    margin-right: auto;
+    width: 100%;
 }
 
 button {
@@ -76,4 +74,19 @@ button:hover {
     position: absolute;
     white-space: nowrap;
     width: 1px;
-  }
+}
+@media (min-width: 768px) {
+    html {
+        font-size: 1.125rem;
+    }
+    .wrapper {
+        width: 80%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+@media (min-width: 1400px) {
+    .wrapper {
+        width: 60%;
+    }
+}

@@ -1,25 +1,24 @@
 .transaction {
     display: grid;
     grid-template: 1fr 1fr / 1fr 1fr 1fr;
-    gap: 10px 100px;
+    gap: 10px;
+    align-items: center;
     min-height: 80px;
     margin: 10px 0;
-    padding: 30px 100px;
+    padding: 30px;
     border-radius: 0.5rem;
     background-color: var(--transaction-color);
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
 }
 .date {
-    grid-area: 1 / 1 / 1 / 2;
+    grid-area: 1 / 1 / 1 / 3;
     font-weight: 500;
     font-size: 1.125rem;
     width: 100%;
-    margin-bottom: 15px;
 }
 .category {
-    grid-area: 2 / 1 / 2 / 2;
-    justify-self: flex-start;
-    align-self: flex-end;
+    grid-area: 1 / 3 / 1 / 4;
+    justify-self: flex-end;
     display: flex;
     align-items: center;
     font-size: 1.5rem;
@@ -30,13 +29,13 @@
     background: var(--category-color);
 }
 .from {
-    grid-area: 1 / 2 / 3 / 3;
+    grid-area: 2 / 1 / 3 / 2;
     display: flex;
     align-items: center;
     font-size: 1.5rem;
 }
 .sum {
-    grid-area: 1 / 3 / 3 / 4;
+    grid-area: 2 / 3 / 3 / 4;
     display: flex;
     align-items: center;
     justify-content: flex-end;

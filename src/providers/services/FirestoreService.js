@@ -1,35 +1,12 @@
-import { collection, doc, getDoc, getDocs, addDoc, updateDoc, query, where} from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, addDoc, query, where} from "firebase/firestore";
 import {firestore} from "../../firebase";
 
 const transactionsCollection = collection(firestore, "transactions");
 const categoriesCollection = collection(firestore, "categories");
 const currenciesCollection = collection(firestore, "currencies");
-const remoteStateCollection = collection(firestore, "remote-state");
 
-const getRemoteDate = async () => {
-    const resDoc = await getDoc(doc(firestore, 'remote-state', 'current-date'));
-    return {year: resDoc.data().year, month: resDoc.data().month};
-}
-
-const getRemoteLastUpdate = async () => {
-    let resDoc = await getDoc(doc(firestore, 'remote-state', 'last-update'));
-    return resDoc.data()['last-update'];
-}
-
-const updateRemoteDate = async (year=new Date().getFullYear(), month=new Date().getMonth()) => {
-    const dateDoc = doc(remoteStateCollection, 'current-date');
-    await updateDoc(dateDoc, {year, month});
-}
-
-const updateLastUpdate = async (timestamp) => {
-    const dateDoc = doc(remoteStateCollection, 'last-update');
-    updateDoc(dateDoc, {'last-update': timestamp});
-}
-
-const remoteStateService = {getRemoteDate, getRemoteLastUpdate, updateRemoteDate, updateLastUpdate};
-export { remoteStateService };
 // ============================================================
-const getTransactions = async (year, month) => {
+const getTransactions = async ({year, month}) => {
     const q = query(transactionsCollection, where('date', '>=', new Date(year, month, 1)), where('date', '<=', new Date(year, month + 1, 0)));
     let transactionsSnapshot;
     try {
@@ -58,7 +35,7 @@ const getTransactions = async (year, month) => {
     return transactions;
 }
 
-const addTransaction = async (category, currency, type, sum, from, date) => {
+const addTransaction = async ({category, currency, type, sum, from, date}) => {
     const categoryRef = doc(firestore, 'categories', category.toLowerCase());
     const currencyRef = doc(firestore, 'currencies', currency.toLowerCase());
     const currDate = new Date(date);

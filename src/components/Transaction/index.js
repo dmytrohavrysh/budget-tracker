@@ -17,10 +17,9 @@ const parseDate = (date, locale) => {
 const Transaction = ({sum, from, category, currency, date}) => {
     const {settingsState} = useContext(SettingsContext);
     const parsedDate = parseDate(date, settingsState.locale);
-    console.log('!!!!!!!!!!');
     return (
         <div className={styles.transaction}>
-            <div className={styles.date}>{parsedDate.day} {parsedDate.month} {parsedDate.year}<br/>{parsedDate.time}</div>
+            <div className={styles.date}>{parsedDate.day} {parsedDate.month} {parsedDate.year} {parsedDate.time}</div>
             {/* <div className={styles.category}>{category}</div> */}
             <div className={styles.category}><FontAwesomeIcon className={styles.icon} icon={categoryIcons[category]} />{category}</div>
             <div className={styles.from}>{from}</div>

@@ -1,9 +1,9 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState} from 'react';
 import ReactModal from 'react-modal';
 import styles from './AddTransactionModal.module.css';
-import { CategoriesContext } from '../../providers/context/Categories';
-import { CurrenciesContext } from '../../providers/context/Currencies';
-import { TransactionsContext } from '../../providers/context/Transactions';
+import { categoriesService } from '../../providers/services/FirestoreService';
+import { currenciesService } from '../../providers/services/FirestoreService';
+import { useQuery } from '@tanstack/react-query';
 
 const formatDate = (date) => {
     const d = new Date(date);
@@ -19,15 +19,17 @@ const formatDate = (date) => {
     return `${year}-${month}-${day}T${hours}:${minutes}`;
 }
 
-const AddTransactionModal = ({isOpen, setModal}) => {    
-    const {transactionsState, dispatchTransactions} = useContext(TransactionsContext);
-    const {categoriesState, dispatchCategories} = useContext(CategoriesContext);
-    const {currenciesState, dispatchCurrencies} = useContext(CurrenciesContext);
+const FLOAT_NUMBER_REGEX = /^[\+\-]?([0-9]*\.)?[0-9]+$/;
+
+const AddTransactionModal = ({isOpen, setModal, addTransaction: addTransactionLocal}) => {
+    const categories = useQuery('categories', categoriesService.getCategories);
+    const currencies = useQuery('currencies', currenciesService.getCurrencies);
+
     const [formData, setFormData] = useState({
         type: 'expense',
-        category: categoriesState.length > 0 ? categoriesState[0].name: '',
-        sum: 0.01,
-        currency: currenciesState.length > 0 ? currenciesState[0].name: '',
+        category: categories.length > 0 ? categories[0].name: '',
+        sum: 1.00,
+        currency: currencies.length > 0 ? currencies[0].name: '',
         from: 'Me',
         date: new Date()
     });
@@ -35,7 +37,7 @@ const AddTransactionModal = ({isOpen, setModal}) => {
 
     const addTransaction = async (e) => {
         e.preventDefault();
-        dispatchTransactions({type: 'addTransaction', payload: {...formData}});
+        addTransactionLocal(formData);
         setModal(false);
     }
 
@@ -43,8 +45,8 @@ const AddTransactionModal = ({isOpen, setModal}) => {
         setModal(false);
     }
 
-    const changeData = (e) => {
-        setFormData({...formData, [e.target.name]: e.target.value});
+    const updateData = (e) => {
+        setFormData({...formData, [e.target.name]: FLOAT_NUMBER_REGEX.test(e.target.value) ? +e.target.value : e.target.value});
     }
 
     return (
@@ -59,36 +61,37 @@ const AddTransactionModal = ({isOpen, setModal}) => {
             shouldCloseOnEsc={true}
             shouldReturnFocusAfterClose={true}
         >
+            
             <h1 className={styles.heading}>Add transaction</h1>
             <form className={styles.form} onSubmit={addTransaction}>
                 <fieldset className={styles.fieldset}>
                     <legend className={styles.legend}>Type</legend>
-                    <label>Income: <input type="radio" name="type" className={styles.fieldsetRadio} checked={formData.type === 'income'} value="income" onChange={changeData}/></label>
-                    <label>Expense: <input type="radio" name="type" className={styles.fieldsetRadio} checked={formData.type === 'expense'} value="expense" onChange={changeData}/></label>
+                    <label>Income: <input type="radio" name="type" className={styles.fieldsetRadio} checked={formData.type === 'income'} value="income" onChange={updateData}/></label>
+                    <label>Expense: <input type="radio" name="type" className={styles.fieldsetRadio} checked={formData.type === 'expense'} value="expense" onChange={updateData}/></label>
                 </fieldset>
                 <label className={styles.label}>
                     <span className={styles.title}>Sum:</span>
-                    <input type="number" className={styles.control} value={formData.sum} name="sum" onChange={changeData} step="0.01" min="0.01" required/>
+                    <input type="number" className={styles.control} value={formData.sum} name="sum" onChange={updateData} step="0.01" min="0.01" required/>
                 </label>
                 <label className={styles.label}>
                     <span className={styles.title}>Category:</span>
-                    <select className={`${styles.control} ${styles.select}`} name="category" onChange={changeData}>
-                        {categoriesState.map((category, i) => <option key={i} value={category.id}>{category.name}</option>)}
+                    <select className={`${styles.control} ${styles.select}`} name="category" onChange={updateData}>
+                        {categories?.data?.map((category, i) => <option key={i} value={category.id}>{category.name}</option>)}
                     </select>
                 </label>
                 <label className={styles.label}>
                     <span className={styles.title}>Currency:</span>
-                    <select className={styles.control} name="currency" onChange={changeData}>
-                        {currenciesState.map((currency, i) => <option key={i} value={`${currency.id}`}>{`${currency.symbol}  ${currency.name}`}</option>)}
+                    <select className={styles.control} name="currency" onChange={updateData}>
+                        {currencies?.data?.map((currency, i) => <option key={i} value={`${currency.id}`}>{`${currency.symbol}  ${currency.name}`}</option>)}
                     </select>
                 </label>
                 <label className={styles.label}>
                     <span className={styles.title}>From:</span>
-                    <input type="text" className={styles.control} value={formData.from} onChange={changeData} name="from" required/>
+                    <input type="text" className={styles.control} value={formData.from} onChange={updateData} name="from" required/>
                 </label>
                 <label className={styles.label}>
                     <span className={styles.title}>Date:</span>
-                    <input type="datetime-local" className={styles.control} value={formatDate(formData.date)} onChange={changeData} name="date"/>
+                    <input type="datetime-local" className={styles.control} value={formatDate(formData.date)} onChange={updateData} name="date"/>
                 </label>
                 <div className={styles.btnGroup}>
                     <button className={`${styles.btn} ${styles.closeBtn}`} onClick={close}>Cancel</button>

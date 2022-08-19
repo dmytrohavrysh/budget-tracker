@@ -1,7 +1,6 @@
 import { useState, useContext, useEffect, useRef } from 'react';
 import styles from './DateSelector.module.css';
 import { SettingsContext } from '../../providers/context/Settings';
-import { getLocalMonth, getLocalYear } from '../../providers/services/Storage';
 
 function getMonthList(locales) {
     const format = 'long';
@@ -21,9 +20,9 @@ function getMonthList(locales) {
 const DateSelector = ({changedDate}) => {
     const [years, setYears] = useState([]);
     const [monthList, setMonthList] = useState([]);
-    const [selectedYear, setSelectedYear] = useState(getLocalYear());
+    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+    const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
     const {settingsState, dispatchSettings} = useContext(SettingsContext);
-    const [selectedMonth, setSelectedMonth] = useState(getLocalMonth());
 
     const allMonths = getMonthList(settingsState.locale);
     const yearRef = useRef(null);
@@ -39,8 +38,7 @@ const DateSelector = ({changedDate}) => {
     const changeDate = () => {
         const year = +yearRef.current.value;
         const month = +monthRef.current.value;
-        dispatchSettings({type: 'changeDate', payload: {year, month}})
-            .then(() => changedDate());
+        changedDate({year, month});
     }
     const changeSelectedDate = () => {
         const year = +yearRef.current.value;
@@ -68,7 +66,7 @@ const DateSelector = ({changedDate}) => {
                 {monthList.map((month) => <option key={month.index} value={month.index}>{month.name}</option>)}
             </select>
             <label htmlFor='year' className={styles.label}>Year:</label>
-            <select id='year' onChange={() => {updateMonthList(); changeSelectedDate()}} className={styles.select} ref={yearRef} value={selectedYear}>
+            <select id='year' onChange={(e) => {updateMonthList(e); changeSelectedDate()}} className={styles.select} ref={yearRef} value={selectedYear}>
                 {years.map((year) => <option key={year} value={year}>{year}</option>)}
             </select>
             <button onClick={changeDate} className={styles.okBtn}>Ok</button>
