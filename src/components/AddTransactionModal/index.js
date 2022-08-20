@@ -1,9 +1,9 @@
-import { useState} from 'react';
-import ReactModal from 'react-modal';
+import { useEffect, useState} from 'react';
 import styles from './AddTransactionModal.module.css';
-import { categoriesService } from '../../providers/services/FirestoreService';
-import { currenciesService } from '../../providers/services/FirestoreService';
+import { getCategories } from '../../providers/services/Storage';
+import { getCurrencies } from '../../providers/services/Storage';
 import { useQuery } from '@tanstack/react-query';
+import Modal from '../Modal';
 
 const formatDate = (date) => {
     const d = new Date(date);
@@ -21,9 +21,11 @@ const formatDate = (date) => {
 
 const FLOAT_NUMBER_REGEX = /^[\+\-]?([0-9]*\.)?[0-9]+$/;
 
-const AddTransactionModal = ({isOpen, setModal, addTransaction: addTransactionLocal}) => {
-    const categories = useQuery('categories', categoriesService.getCategories);
-    const currencies = useQuery('currencies', currenciesService.getCurrencies);
+const AddTransactionModal = ({addTransaction: addTransactionLocal, isModalOpen, closeModal, isLocked}) => {
+    const categories = useQuery(['categories'], getCategories);
+    const currencies = useQuery(['currencies'], getCurrencies);
+
+
 
     const [formData, setFormData] = useState({
         type: 'expense',
@@ -38,11 +40,7 @@ const AddTransactionModal = ({isOpen, setModal, addTransaction: addTransactionLo
     const addTransaction = async (e) => {
         e.preventDefault();
         addTransactionLocal(formData);
-        setModal(false);
-    }
-
-    const close = () => {
-        setModal(false);
+        closeModal();
     }
 
     const updateData = (e) => {
@@ -50,18 +48,7 @@ const AddTransactionModal = ({isOpen, setModal, addTransaction: addTransactionLo
     }
 
     return (
-        <ReactModal 
-            isOpen={isOpen}
-            className={styles.modal}
-            overlayClassName={styles.overlay}
-            contentLabel="Add Transaction"
-            onRequestClose={close}
-            ariaHideApp={true}
-            shouldCloseOnOverlayClick={true}
-            shouldCloseOnEsc={true}
-            shouldReturnFocusAfterClose={true}
-        >
-            
+        <Modal open={isModalOpen} dataLoaded={categories.isFetched && currencies.isFetched} onClose={closeModal} locked={isLocked}>
             <h1 className={styles.heading}>Add transaction</h1>
             <form className={styles.form} onSubmit={addTransaction}>
                 <fieldset className={styles.fieldset}>
@@ -94,12 +81,12 @@ const AddTransactionModal = ({isOpen, setModal, addTransaction: addTransactionLo
                     <input type="datetime-local" className={styles.control} value={formatDate(formData.date)} onChange={updateData} name="date"/>
                 </label>
                 <div className={styles.btnGroup}>
-                    <button className={`${styles.btn} ${styles.closeBtn}`} onClick={close}>Cancel</button>
+                    <button className={`${styles.btn} ${styles.closeBtn}`} onClick={closeModal}>Cancel</button>
                     <button className={`${styles.btn} ${styles.addBtn}`} onClick={addTransaction}>Add</button>
                 </div>
                 
             </form>
-        </ReactModal>
+        </Modal>
     )
 }
 

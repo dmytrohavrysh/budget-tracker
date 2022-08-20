@@ -2,12 +2,14 @@ import { lazy, Suspense, useEffect, useState } from 'react';
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import styles from "./Transactions.module.css";
 import Transaction from "../Transaction/index"
-import ReactModal from 'react-modal';
 import DateSelector from '../DateSelector';
 import { getTransactions, addTransaction } from '../../providers/services/Storage';
-const AddTransactionModal = lazy(() => import('../../components/AddTransactionModal')) ;
+import useModal from '../../hooks/useModal';
+import { Loader } from '../Loader';
+const AddTransactionModal = lazy(() => import('../../components/AddTransactionModal'));
 
 const Transactions = () => {
+    const [isModalOpen, openModal, closeModal, isLocked ] = useModal();
     const queryClient = useQueryClient()
     const [date, setDate] = useState({year: new Date().getFullYear(), month: new Date().getMonth()});
     const transactions = useQuery(['transactions', date], async() => await getTransactions(date.year, date.month), {
@@ -16,29 +18,21 @@ const Transactions = () => {
         placeholderData: []
     });
     
-    
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    // Disable the content when the modal is open
-    useEffect(() => {
-        ReactModal.setAppElement('#root');
-    }, []);
-    
-    const openModal = () => setIsModalOpen(true);
-    
     const mutateData = useMutation(newTransaction => {
         addTransaction(newTransaction);
     }, {
         onMutate: async newTransaction => {
             await queryClient.cancelQueries(['transactions'])
-            const previousTodos = queryClient.getQueryData(['transactions'])
-            queryClient.setQueryData(['transactions'], old => [...old, newTransaction])
-            return { previousTodos }
+            const previousTransactions = queryClient.getQueryData({queryKey: 'transactions'})
+            queryClient.setQueryData({queryKey: 'transactions', updater: old => [...old, newTransaction]})
+            return { previousTransactions }
         },
         onError: (err, newTransaction, context) => {
-            queryClient.setQueryData(['transactions'], context.previousTodos)
+            debugger
+            queryClient.setQueryData('transactions', context.previousTransactions)
         },
         onSettled: () => {
-            queryClient.invalidateQueries({queryKey: ['transactions'], refetchActive: false})
+            queryClient.invalidateQueries(['transactions'])
         },
     })
     
@@ -56,7 +50,7 @@ const Transactions = () => {
         <DateSelector changedDate={changedDate} />
         
         { transactions.isLoading || transactions.fetchStatus === 'fetching'? 
-            <div className={styles.loader}></div>
+            <Loader />
             : transactions.isError?
             <>  
                 <div className={styles.errorSmile}></div>
@@ -70,10 +64,13 @@ const Transactions = () => {
                 <button className={styles.add} onClick={openModal}>Add Transaction</button>
             </>
         }
-        {isModalOpen && 
-            <Suspense>
-            <AddTransactionModal isOpen={isModalOpen} setModal={setIsModalOpen} addTransaction={changedData}/>
-            </Suspense>}
+
+            {isModalOpen ?
+                <Suspense>
+                    <AddTransactionModal addTransaction={changedData} isModalOpen={isModalOpen} closeModal={closeModal} isLocked={isLocked}/>
+                </Suspense>
+            : ''
+            }
             
             </>
             )
