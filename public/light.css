@@ -2,10 +2,12 @@
     --bg-color: #fff;
     --text-primary: #000;
     --text-secondary: #fff;
+    --accent-color: #2196F3;
     --border: #ccc;
     --success: #27ae60;
     --error: #e74c3c;
     --category-color: #2196F3;
+    --category-hover: #2196f366;
     --header-color: #6200ee;
     --window-color: #fff;
     --button-text-color: #fff;
@@ -14,4 +16,5 @@
     --transaction-color: #f5f5f5;
     --indicator-color: #fff;
     --indicator-text-color: #000;
+
 }

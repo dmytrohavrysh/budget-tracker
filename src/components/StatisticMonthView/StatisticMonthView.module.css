@@ -1,0 +1,37 @@
+.item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 2px solid var(--border);
+    background-color: var(--window-color);
+    border-bottom: none;
+    padding: 20px 10px;
+    cursor: pointer;
+}
+.item:last-of-type {
+    border-bottom: 2px solid var(--border);
+}
+.item:hover {
+    background-color: var(--accent-color);
+}
+.item__active {
+    background-color: var(--accent-color);
+}
+.details {
+    margin-top: 30px;
+    border: 2px solid var(--border);
+}
+.details__item {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--border);
+}
+.details__date {
+    width: 100%;
+}
+.details__sum {
+    font-weight: bold;
+}

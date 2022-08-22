@@ -58,17 +58,17 @@ const AddTransactionModal = ({addTransaction: addTransactionLocal, isModalOpen, 
                 </fieldset>
                 <label className={styles.label}>
                     <span className={styles.title}>Sum:</span>
-                    <input type="number" className={styles.control} value={formData.sum} name="sum" onChange={updateData} step="0.01" min="0.01" required/>
+                    <input type="number" className={styles.control} defaultValue={formData.sum} name="sum" onChange={updateData} step="0.01" min="0.01" required/>
                 </label>
                 <label className={styles.label}>
                     <span className={styles.title}>Category:</span>
-                    <select className={`${styles.control} ${styles.select}`} name="category" onChange={updateData}>
+                    <select className={`${styles.control} ${styles.select}`} name="category" onLoad={updateData} onChange={updateData}>
                         {categories?.data?.map((category, i) => <option key={i} value={category.id}>{category.name}</option>)}
                     </select>
                 </label>
                 <label className={styles.label}>
                     <span className={styles.title}>Currency:</span>
-                    <select className={styles.control} name="currency" onChange={updateData}>
+                    <select className={styles.control} name="currency" onLoad={updateData} onChange={updateData}>
                         {currencies?.data?.map((currency, i) => <option key={i} value={`${currency.id}`}>{`${currency.symbol}  ${currency.name}`}</option>)}
                     </select>
                 </label>
@@ -78,7 +78,7 @@ const AddTransactionModal = ({addTransaction: addTransactionLocal, isModalOpen, 
                 </label>
                 <label className={styles.label}>
                     <span className={styles.title}>Date:</span>
-                    <input type="datetime-local" className={styles.control} value={formatDate(formData.date)} onChange={updateData} name="date"/>
+                    <input type="datetime-local" className={styles.control} defaultValue={formatDate(formData.date)} onChange={updateData} name="date"/>
                 </label>
                 <div className={styles.btnGroup}>
                     <button className={`${styles.btn} ${styles.closeBtn}`} onClick={closeModal}>Cancel</button>

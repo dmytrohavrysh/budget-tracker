@@ -6,7 +6,9 @@ import DateSelector from '../DateSelector';
 import { getTransactions, addTransaction } from '../../providers/services/Storage';
 import useModal from '../../hooks/useModal';
 import { Loader } from '../Loader';
+import { Error } from '../Error';
 const AddTransactionModal = lazy(() => import('../../components/AddTransactionModal'));
+
 
 const Transactions = () => {
     const [isModalOpen, openModal, closeModal, isLocked ] = useModal();
@@ -52,10 +54,7 @@ const Transactions = () => {
         { transactions.isLoading || transactions.fetchStatus === 'fetching'? 
             <Loader />
             : transactions.isError?
-            <>  
-                <div className={styles.errorSmile}></div>
-                <h2 className={styles.errorText}>I can't load transactions...</h2>
-            </>
+                <Error>I can't load transactions...</Error>
             : 
             <>
                 <div className={styles.transactions}>

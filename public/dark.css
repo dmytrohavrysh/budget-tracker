@@ -1,6 +1,7 @@
 :root {
     --bg-color: #000;
     --bg-color-inverted: #fff;
+    --accent-color: #bb86fc;
     --text-primary: #fff;
     --text-secondary: #fff;
     --border: #ccc;
@@ -16,4 +17,5 @@
     --transaction-color: #121212;
     --indicator-color: #03dac6;
     --indicator-text-color: #000;
+    
 }

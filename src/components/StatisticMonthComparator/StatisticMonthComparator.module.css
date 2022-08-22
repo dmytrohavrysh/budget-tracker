@@ -1,0 +1,21 @@
+.comparator {
+    display: flex;
+    gap: 20px;
+}
+.left, .right {
+    width: 50%;
+}
+.comparator__month {
+    box-sizing: border-box;
+    appearance: none;
+    border: none;
+    font: inherit;
+    font-weight: bold;
+    width: 100%;
+    padding: 8px 10px;
+    color: var(--text-secondary);
+    background-color: var(--header-color);
+} 
+.comparator__body {
+    box-sizing: border-box;
+}
