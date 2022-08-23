@@ -7,9 +7,13 @@
 import StatisticMonthComparator from '../../components/StatisticMonthComparator';
 
 const Statistic = () => {
-    
+    const currDate = new Date();
+    const currYear = currDate.getFullYear();
+    const currMonth = currDate.getMonth();
+    const prevYear = currMonth > 0 ? currYear : currYear - 1;
+    const prevMonth = currMonth === 0 ? 11 : currMonth - 1;
     return (<>
-        <StatisticMonthComparator year1={2022} month1={6} year2={2022} month2={5}/>
+        <StatisticMonthComparator year1={currYear} month1={currMonth} year2={prevYear} month2={prevMonth}/>
         </>
     );
 }

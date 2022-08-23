@@ -3,7 +3,6 @@ import {firestore} from "../../firebase";
 
 const transactionsCollection = collection(firestore, "transactions");
 const categoriesCollection = collection(firestore, "categories");
-const currenciesCollection = collection(firestore, "currencies");
 
 // ============================================================
 const getTransactions = async ({year, month}) => {
@@ -18,15 +17,12 @@ const getTransactions = async ({year, month}) => {
     for(const doc of transactionsSnapshot) {
         const data = doc.data();
         const category = (await getDoc(data.category));
-        const currency = (await getDoc(data.currency));
         const transaction = {
             id: doc.id,
             sum: data.sum,
             from: data.from,
             category: category.data().name,
             categoryId: category.id,
-            currency: currency.data(),
-            currencyId: currency.id,
             date: new Date(data.date.seconds*1000)
         }
         transactions.push(transaction);
@@ -35,14 +31,12 @@ const getTransactions = async ({year, month}) => {
     return transactions;
 }
 
-const addTransaction = async ({category, currency, type, sum, from, date}) => {
+const addTransaction = async ({category, type, sum, from, date}) => {
     const categoryRef = doc(firestore, 'categories', category.toLowerCase());
-    const currencyRef = doc(firestore, 'currencies', currency.toLowerCase());
     const currDate = new Date(date);
     const transaction = {
         sum: type === 'income' ? parseFloat(sum) : -parseFloat(sum),
         category: categoryRef,
-        currency: currencyRef,
         from,
         date: currDate
     }
@@ -71,21 +65,3 @@ const getCategories = async () => {
 
 const categoriesService = {getCategories}
 export { categoriesService };
-// ============================================================
-const getCurrencies = async () => {
-    let currenciesSnapshot;
-    try {
-        currenciesSnapshot = (await getDocs(currenciesCollection)).docs;
-    } catch (error) {
-        throw new Error('Cannot get currencies');
-    }
-    const currencies = [];
-    for(const doc of currenciesSnapshot) {
-        const data = doc.data();
-        currencies.push({name: data.name, id: doc.id, symbol: data.symbol});
-    }
-    return currencies;
-}
-
-const currenciesService = {getCurrencies}
-export { currenciesService };

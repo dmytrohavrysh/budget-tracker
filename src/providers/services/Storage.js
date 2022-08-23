@@ -1,4 +1,4 @@
-import { transactionsService, categoriesService, currenciesService } from "./FirestoreService";
+import { transactionsService, categoriesService } from "./FirestoreService";
 
 async function getTransactions(year, month) {
     year = year || new Date().getFullYear();
@@ -13,8 +13,5 @@ async function getCategories() {
     return await categoriesService.getCategories();
 }
 
-async function getCurrencies() {
-    return await currenciesService.getCurrencies();
-}
 
-export { getTransactions, addTransaction, getCategories, getCurrencies };
+export { getTransactions, addTransaction, getCategories };

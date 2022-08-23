@@ -50,7 +50,8 @@ const SettingsProvider = ({children}) => {
 
     const [settingsState, dispatchSettings] = useAsyncReducer(reducer, {
         locale: 'en-US',
-        theme: currTheme
+        theme: currTheme,
+        currency: '₴'
     });
 
     useEffect(() => {

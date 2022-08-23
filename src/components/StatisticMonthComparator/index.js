@@ -23,15 +23,16 @@ const extractCategories = (transactions) => {
 }
 
 function StatisticMonthComparator({ month1, year1, month2, year2 }) {
+    const [date1, setDate1] = useState({month: month1, year: year1})
+    const [date2, setDate2] = useState({month: month2, year: year2})
     const [originalTransactions1, setOriginalTransactions1] = useState([]);
     const [originalTransactions2, setOriginalTransactions2] = useState([]);
     const [modTransactions1, setModTransactions1] = useState([]);
     const [modTransactions2, setModTransactions2] = useState([]);
     const [isDataProcessed, setDataProcessed] = useState(false);
     
-    const leftTransactions = useQuery([`statistic-month-${month1}-${year1}`], async () => {
-        console.log('Update 1...');
-        const leftTransactions = await getTransactions(year1, month1);
+    const leftTransactions = useQuery([`statistic-month-${date1.month}-${year1.year}`], async () => {
+        const leftTransactions = await getTransactions(date1.year, date1.month);
         return leftTransactions;
     }, {
         placeholderData: [],    
@@ -40,9 +41,8 @@ function StatisticMonthComparator({ month1, year1, month2, year2 }) {
         onError: () => console.log('error')
     });
     
-    const rightTransactions = useQuery([`statistic-month-${month2}-${year2}`], async () => {
-        console.log('Update 2...');
-        const rightTransactions = await getTransactions(year2, month2);
+    const rightTransactions = useQuery([`statistic-month-${date2.month}-${date2.year}`], async () => {
+        const rightTransactions = await getTransactions(date2.year, date2.month);
         return rightTransactions;
     }, {
         placeholderData: [],
@@ -55,9 +55,18 @@ function StatisticMonthComparator({ month1, year1, month2, year2 }) {
         processCategories()
     }, [leftTransactions.data, rightTransactions.data])
 
-    
+    const changeDate = (e) => {
+        const year = +e.target.value.slice(0, 4);
+        const month = +e.target.value.slice(6) - 1;
+        const location = e.target.dataset.location;
+        if(location === 'left') {
+            setDate1({year, month});
+        } else {
+            setDate2({year, month});
+        }
+    }
+
     function processCategories() {
-        console.log('Cats...');
         if(leftTransactions.isSuccess && leftTransactions.isFetched && rightTransactions.isSuccess && rightTransactions.isFetched) {
             setOriginalTransactions1(leftTransactions.data);
             setOriginalTransactions2(rightTransactions.data);
@@ -72,10 +81,10 @@ function StatisticMonthComparator({ month1, year1, month2, year2 }) {
             let newTransactions2 = [];   
             
             [...commonCategories, ...leftCategoriesOnly].forEach(cat => {
-                newTransactions1.push(leftTransactions.data.find(val => val.category === cat));
+                newTransactions1.push(categories1.find(val => val[0] === cat));
             });
             [...commonCategories, ...rightCategoriesOnly].forEach(cat => {
-                newTransactions2.push(rightTransactions.data.find(val => val.category === cat));
+                newTransactions2.push(categories2.find(val => val[0] === cat));
             }); 
             setModTransactions1(newTransactions1);
             setModTransactions2(newTransactions2);
@@ -88,14 +97,16 @@ function StatisticMonthComparator({ month1, year1, month2, year2 }) {
         {isDataProcessed ? 
             <>
                 <div className={styles.left}>
-                    <input type="month" className={styles.comparator__month} pattern="[0-9]{4}-[0-9]{2}" defaultValue={`${year1}-${(month1+1) > 9 ? month1+1 : '0'+(month1+1)}`}/>
+                    
+                    <input type="month" data-location="left" className={styles.comparator__month} pattern="[0-9]{4}-[0-9]{2}" onChange={changeDate} defaultValue={`${date1.year}-${(date1.month+1) > 9 ? date1.month+1 : '0'+(date1.month+1)}`}/>
+                    
                     <div className={styles.comparator__body}> 
                         <StatisticMonthView originalTransactions={originalTransactions1} modTransactions={modTransactions1}/>
                     </div>  
                 </div> 
             
                 <div className={styles.right}>
-                    <input type="month" className={styles.comparator__month} pattern="[0-9]{4}-[0-9]{2}" defaultValue={`${year2}-${(month2+1) > 9 ? month2+1 : '0'+(month2+1)}`}/>
+                    <input type="month" data-location="right" className={styles.comparator__month} pattern="[0-9]{4}-[0-9]{2}" onChange={changeDate} defaultValue={`${date2.year}-${(date2.month+1) > 9 ? date2.month+1 : '0'+(date2.month+1)}`}/>
                     <div className={styles.comparator__body}> 
                         <StatisticMonthView originalTransactions={originalTransactions2} modTransactions={modTransactions2} />
                     </div>
