@@ -1,17 +1,19 @@
 import { initializeApp } from "firebase/app";
+import {getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword} from "firebase/auth"
 import {getFirestore} from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAfC35uQiouO-Z7yuQSIrC-7mklow_KyYY",
-  authDomain: "budget-diary-999e4.firebaseapp.com",
-  projectId: "budget-diary-999e4",
-  storageBucket: "budget-diary-999e4.appspot.com",
-  messagingSenderId: "685308263563",
-  appId: "1:685308263563:web:2d239e380264041596688e",
-  measurementId: "G-7R59FEDD45"
+  apiKey: process.env.REACT_APP_API_KEY,
+  authDomain: process.env.REACT_APP_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_APP_ID,
+  measurementId: process.env.REACT_APP_MEASUREMENT_ID
 };
 
 const app = initializeApp(firebaseConfig);
 const firestore = getFirestore(app);
+const auth = getAuth(app);
 
-export { app, firestore };
+export { app, firestore, auth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword};

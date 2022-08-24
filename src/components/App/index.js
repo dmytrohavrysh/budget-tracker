@@ -4,6 +4,7 @@ import Account from "../../pages/Account/index";
 import Statistic from "../../pages/Statistic/index";
 import NotFound from "../../pages/NotFound/index";
 import Header from "../Header/index";
+import Login from "../../pages/Login";
 
 const App = () => {
     
@@ -14,6 +15,7 @@ const App = () => {
                   <Routes>
                       <Route path="/account" element={<Account />} />
                       <Route path="/statistic" element={<Statistic />} />
+                      <Route path="/login" element={<Login />} />
                       <Route path="/" element={<Home />} />
                       <Route path="*" element={<NotFound />} />
                   </Routes>

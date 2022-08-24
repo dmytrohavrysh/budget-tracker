@@ -60,7 +60,7 @@ const Transactions = () => {
                 <div className={styles.transactions}>
                 {transactions?.data?.map((data, i) => <Transaction key={i} sum={data.sum} category={data.category} currency={data.currency} from={data.from} date={data.date}/>)}
                 </div>
-                <button className={styles.add} onClick={openModal}>Add Transaction</button>
+                <button className={`${styles.add} btn`} onClick={openModal}>Add Transaction</button>
             </>
         }
 
