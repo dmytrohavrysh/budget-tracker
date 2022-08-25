@@ -1,19 +1,19 @@
-// TODO:
-// - Compare and Statistic modes
-// Compare:
-// - Compare two budgets by categories
-// - Click on a category to see expenses and incomes
-// - Months to compare can be selected
+import { Error } from '../../components/Error';
 import StatisticMonthComparator from '../../components/StatisticMonthComparator';
+import { useAuth } from '../../hooks/useAuth';
 
 const Statistic = () => {
     const currDate = new Date();
     const currYear = currDate.getFullYear();
     const currMonth = currDate.getMonth();
+    const {currUser} = useAuth();
     const prevYear = currMonth > 0 ? currYear : currYear - 1;
     const prevMonth = currMonth === 0 ? 11 : currMonth - 1;
     return (<>
-        <StatisticMonthComparator year1={currYear} month1={currMonth} year2={prevYear} month2={prevMonth}/>
+            {currUser?.emailVerified ?
+            <StatisticMonthComparator year1={currYear} month1={currMonth} year2={prevYear} month2={prevMonth}/>
+            : <Error>To use this application you must verify your email</Error>
+            }
         </>
     );
 }

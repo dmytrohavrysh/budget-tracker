@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom';
 import styles from './Header.module.css';
 import ThemeSwitcher from '../ThemeSwitcher';
 import AccountMenu from '../AccountMenu';
-import { memo } from 'react';
 
 const Header = () => {
     return (
@@ -26,4 +25,4 @@ const Header = () => {
     );
 }
 
-export default memo(Header);
+export default Header;

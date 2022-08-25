@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import {useNavigate} from 'react-router-dom';
 import Alert from '../../components/Alert';
+import {initCollection} from '../../providers/services/Storage'
 import styles from './Login.module.css';
 
 function Login() {
@@ -17,7 +18,7 @@ function Login() {
     const newPasswordRef = useRef();
     const confirmPasswordRef = useRef();
     const resetEmailRef = useRef();
-    const {signUp, login, resetPassword} = useAuth();
+    const {signUp, login, resetPassword, currUser} = useAuth();
 
     const switchForm = (e) => {
         setDisplayedForm(e.target.textContent)
@@ -26,17 +27,16 @@ function Login() {
     const handleSignup = async (e) => {
         setError('');
         e.preventDefault();
-
         if(newPasswordRef.current.value !== confirmPasswordRef.current.value) {
             setError("Passwords do not match")
             return
         }
-        
         try {
             setIsLoading(true);
             await signUp(newEmailRef.current.value, newPasswordRef.current.value);
-            changeLocation('/');
+            setDisplayedForm('Confirm');
         } catch(e) {
+            console.log(e);
             setError(e.message.slice(e.message.indexOf(' ') + 1, e.message.indexOf('(')))
         } finally {
             setIsLoading(false);
@@ -49,7 +49,13 @@ function Login() {
         try {
             setIsLoading(true);
             await login(emailRef.current.value, passwordRef.current.value);
-            changeLocation('/account');
+            if(currUser && currUser.emailVerified) {
+                initCollection(emailRef.current.value);
+                changeLocation('/');
+            } else {
+                setDisplayedForm('Confirm')
+            }
+            
         } catch(e) {
             setError('Email and/or password are incorrect')
         } finally {
@@ -118,7 +124,7 @@ function Login() {
                 </div>
             </form>
             <p>Already have an account? <button onClick={switchForm} className={styles.link}>Log In</button></p>
-            </> : <> 
+            </> : displayedForm === "Forgot password?" ? <> 
             <form className={styles.form} onSubmit={handleReset}>
                 <div className={styles.form__header}>
                     <h2 className={styles.form__heading}>Reset Password</h2>
@@ -132,6 +138,8 @@ function Login() {
                     <button onClick={switchForm} disabled={isLoading} className={styles.link}>Log In</button>
                 </div>
             </form>
+            </>: <>
+                <Alert type={'success'}>To start using the application, you need to follow the link we sent you by email.</Alert>
             </>}
             {error ?
                 <Alert type={'error'}>{error}</Alert>

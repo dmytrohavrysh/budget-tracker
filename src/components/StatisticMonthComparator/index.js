@@ -1,10 +1,9 @@
 import styles from './StatisticMonthComparator.module.css';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {useQuery} from '@tanstack/react-query';
 import {getTransactions} from '../../providers/services/Storage';
-import { Loader } from '../Loader';
-import { Error } from '../Error';
 import StatisticMonthView from '../StatisticMonthView';
+import { useAuth } from '../../hooks/useAuth';
 
 const groupBy = (transactions, key) => {
     return transactions.reduce((result, x) => {
@@ -23,6 +22,7 @@ const extractCategories = (transactions) => {
 }
 
 function StatisticMonthComparator({ month1, year1, month2, year2 }) {
+    const {currUser} = useAuth();
     const [date1, setDate1] = useState({month: month1, year: year1})
     const [date2, setDate2] = useState({month: month2, year: year2})
     const [originalTransactions1, setOriginalTransactions1] = useState([]);
@@ -32,7 +32,7 @@ function StatisticMonthComparator({ month1, year1, month2, year2 }) {
     const [isDataProcessed, setDataProcessed] = useState(false);
     
     const leftTransactions = useQuery([`statistic-month-${date1.month}-${year1.year}`], async () => {
-        const leftTransactions = await getTransactions(date1.year, date1.month);
+        const leftTransactions = await getTransactions(date1.year, date1.month, currUser.email);
         return leftTransactions;
     }, {
         placeholderData: [],    
@@ -42,7 +42,7 @@ function StatisticMonthComparator({ month1, year1, month2, year2 }) {
     });
     
     const rightTransactions = useQuery([`statistic-month-${date2.month}-${date2.year}`], async () => {
-        const rightTransactions = await getTransactions(date2.year, date2.month);
+        const rightTransactions = await getTransactions(date2.year, date2.month, currUser.email);
         return rightTransactions;
     }, {
         placeholderData: [],

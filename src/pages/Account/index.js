@@ -1,7 +1,5 @@
 import { useRef, useState } from "react"
-import { useMutation, useQuery } from "@tanstack/react-query";
 import { useAuth } from "../../hooks/useAuth";
-import { getUserInfo, updateUserInfo } from "../../providers/services/Storage";
 import styles from "./Account.module.css";
 import Alert from "../../components/Alert";
 
@@ -33,7 +31,7 @@ const Account = () => {
         try {
             const result = await updateProfile({name: name, currPassword: pass, newPassword: newPass})
             if(result === 'Updated!') {
-                setSuccess('The password successfully updated!')
+                setSuccess('Your profile is successfully updated!')
             }
         } catch(e) {
             if(e.code === 'auth/wrong-password') {

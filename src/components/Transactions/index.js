@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import styles from "./Transactions.module.css";
 import Transaction from "../Transaction/index"
@@ -7,21 +7,23 @@ import { getTransactions, addTransaction } from '../../providers/services/Storag
 import useModal from '../../hooks/useModal';
 import { Loader } from '../Loader';
 import { Error } from '../Error';
+import { useAuth } from '../../hooks/useAuth';
 const AddTransactionModal = lazy(() => import('../../components/AddTransactionModal'));
 
 
 const Transactions = () => {
+    const {currUser} = useAuth();
     const [isModalOpen, openModal, closeModal, isLocked ] = useModal();
     const queryClient = useQueryClient()
     const [date, setDate] = useState({year: new Date().getFullYear(), month: new Date().getMonth()});
-    const transactions = useQuery(['transactions', date], async() => await getTransactions(date.year, date.month), {
+    const transactions = useQuery(['transactions', date], async() => await getTransactions(date.year, date.month, currUser?.email), {
         networkMode: 'offlineFirst',
-        networkMode: 'offlineFirst',
-        placeholderData: []
+        placeholderData: [],
+        onError: e => console.log(e)
     });
     
     const mutateData = useMutation(newTransaction => {
-        addTransaction(newTransaction);
+        addTransaction(newTransaction, currUser.email);
     }, {
         onMutate: async newTransaction => {
             await queryClient.cancelQueries(['transactions'])

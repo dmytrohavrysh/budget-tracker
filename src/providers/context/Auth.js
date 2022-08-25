@@ -3,7 +3,8 @@ import { updateProfile as firebaseUpdateProfile,
     reauthenticateWithCredential, 
     EmailAuthProvider,
     sendPasswordResetEmail,
-    signOut
+    signOut,
+    sendEmailVerification
  } from 'firebase/auth';
 import React, { createContext, useEffect, useState } from 'react'
 import { auth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword } from '../../firebase';
@@ -11,29 +12,42 @@ import { auth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEma
 const AuthContext = createContext();
 
 function AuthProvider({children}) {
-    const [currUser, setCurrUser] = useState()
+    const [currUser, setCurrUser] = useState();
+    const [displayUser, setDisplayUser] = useState();
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         setIsLoading(true);
-        const unsubscribe = onAuthStateChanged(auth, user => {
+        const unsubscribe = onAuthStateChanged(auth, async user => { 
             setCurrUser(user)
+            setDisplayUser(user ? {email: user.email, displayName: user.displayName} : null)
             setIsLoading(false);
         })
         return unsubscribe;
     }, [])
 
-    const signUp = (email, password) => {
-        return createUserWithEmailAndPassword(auth, email, password);
+    const signUp = async (email, password) => {
+        const result = await createUserWithEmailAndPassword(auth, email, password);
+        if(currUser && !currUser.emailVerified) {
+            await verifyEmail(currUser);
+        }
+        return result
     }
 
-    const login = (email, password) => {
-        return signInWithEmailAndPassword(auth, email, password)
+    const verifyEmail = (user) => {
+        return sendEmailVerification(user)
+    }
+
+    const login = async (email, password) => {
+        const result = await signInWithEmailAndPassword(auth, email, password);
+        if(currUser && !currUser.emailVerified) {
+            await verifyEmail(currUser);
+        }
+        return result;
     }
     const logout = () => {
         return signOut(auth);
     }
-
 
     const resetPassword = (email) => {
         return sendPasswordResetEmail(auth, email)
@@ -51,18 +65,23 @@ function AuthProvider({children}) {
             await reauthenticateWithCredential(currUser, EmailAuthProvider.credential(currUser.email, currPassword))
             promises.push(updatePassword(currUser, newPassword))
         }
-        return Promise.all(promises).then(() => 'Updated!').catch(e => {
+        return Promise.all(promises).then(() => {
+            setDisplayUser({email: currUser.email, displayName: currUser.displayName})
+            return 'Updated!'
+        }).catch(e => {
             throw e
         })
     }
 
     const value = {
         currUser,
+        displayUser,
         signUp,
         login,
         logout,
         resetPassword,
-        updateProfile
+        updateProfile,
+        verifyEmail
     }
 
     return (

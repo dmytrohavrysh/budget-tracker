@@ -1,16 +1,20 @@
 import { transactionsService, categoriesService, usersService } from "./FirestoreService";
 
-async function getTransactions(year, month) {
+async function getTransactions(year, month, email) {
     year = year || new Date().getFullYear();
     month = month || new Date().getMonth();
-    return await transactionsService.getTransactions({year, month});
+    return await transactionsService.getTransactions({year, month, email});
 }
-async function addTransaction(transaction) {
-    return await transactionsService.addTransaction(transaction);
+async function addTransaction(transaction, email) {
+    return await transactionsService.addTransaction({...transaction, email});
 }
 
-async function getCategories() {
-    return await categoriesService.getCategories();
+async function getCategories(email) {
+    return await categoriesService.getCategories(email);
+}
+
+function initCollection(email) {
+    transactionsService.setCollection(email);    
 }
 
 async function addUser(user) {
@@ -24,4 +28,4 @@ async function updateUserInfo(newInfo) {
     return await usersService.updateUserInfo(newInfo);
 }
 
-export { getTransactions, addTransaction, getCategories, getUserInfo, addUser,updateUserInfo };
+export { getTransactions, addTransaction, initCollection, getCategories, getUserInfo, addUser, updateUserInfo };

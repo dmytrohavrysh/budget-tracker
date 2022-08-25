@@ -6,13 +6,14 @@
 }
 .menu__item {
     background-color: var(--text-secondary);
-    color: var(--text-primary);
+    color: var(--header-color);
     display: flex;
     align-items: center;
     border: none;
     font: inherit;
     height: 100%;
     padding: 0 10px;
+    margin-left: 10px;
     width: max-content;
     max-width: 150px;
     text-overflow: ellipsis;

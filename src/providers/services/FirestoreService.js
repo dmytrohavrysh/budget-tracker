@@ -1,12 +1,17 @@
 import { collection, doc, getDoc, getDocs, addDoc, query, where, updateDoc} from "firebase/firestore";
 import {firestore} from "../../firebase";
 
-const transactionsCollection = collection(firestore, "transactions");
+let transactionsCollection;
 const categoriesCollection = collection(firestore, "categories");
 const usersCollection = collection(firestore, "users");
 
 // ============================================================
-const getTransactions = async ({year, month}) => {
+const setCollection = (email) => {
+    transactionsCollection = collection(firestore, "transactions-"+email)
+}
+
+const getTransactions = async ({email, year, month}) => {
+    setCollection(email)
     const q = query(transactionsCollection, where('date', '>=', new Date(year, month, 1)), where('date', '<=', new Date(year, month + 1, 0)));
     let transactionsSnapshot;
     try {
@@ -32,7 +37,8 @@ const getTransactions = async ({year, month}) => {
     return transactions;
 }
 
-const addTransaction = async ({category, type, sum, from, date}) => {
+const addTransaction = async ({email, category, type, sum, from, date}) => {
+    setCollection(email)
     const categoryRef = doc(firestore, 'categories', category.toLowerCase());
     const currDate = new Date(date);
     const transaction = {
@@ -46,7 +52,7 @@ const addTransaction = async ({category, type, sum, from, date}) => {
     return newDocRef.id;
 }
 
-const transactionsService = {getTransactions, addTransaction}
+const transactionsService = {getTransactions, addTransaction, setCollection}
 export { transactionsService };
 // ============================================================
 const getCategories = async () => {

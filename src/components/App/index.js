@@ -6,6 +6,7 @@ import NotFound from "../../pages/NotFound/index";
 import Header from "../Header/index";
 import Login from "../../pages/Login";
 import PrivateRoute from "../PrivateRoute";
+import Welcome from "../../pages/Welcome";
 
 const App = () => {
     
@@ -14,6 +15,7 @@ const App = () => {
               <Header />
               <div className="wrapper">
                   <Routes>
+                    <Route exact path='/welcome' element={<Welcome/>} />
                     <Route exact path='/account' element={<PrivateRoute/>}>
                         <Route exact path="/account" element={<Account />} />
                     </Route>
@@ -21,7 +23,9 @@ const App = () => {
                         <Route path="/statistic" element={<Statistic />} />
                     </Route>
                     <Route path="/login" element={<Login />} />
-                    <Route path="/" element={<Home />} />
+                    <Route exact path='/' element={<PrivateRoute/>}> 
+                        <Route path="/" element={<Home />} />
+                    </Route>
                     <Route path="*" element={<NotFound />} />
                   </Routes>
               </div>
