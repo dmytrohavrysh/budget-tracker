@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
 import styles from './Header.module.css';
 import ThemeSwitcher from '../ThemeSwitcher';
+import AccountMenu from '../AccountMenu';
+import { memo } from 'react';
 
 const Header = () => {
     return (
@@ -14,13 +16,14 @@ const Header = () => {
                         <li className={styles.menu__item}>
                             <Link to="/statistic" className={styles.menu__link}>Statistic</Link>
                         </li>
+
                     </ul>
                 </nav>
-                {/* <button className={styles.user}>User</button> */}
                 <ThemeSwitcher />
+                <AccountMenu />
             </div>
         </header>
     );
 }
 
-export default Header;
+export default memo(Header);

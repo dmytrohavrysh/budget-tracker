@@ -1,0 +1,18 @@
+.error {
+    margin: 20px auto;
+    text-align: center;
+    background-color: var(--error-bg);
+    border: 1px solid var(--error-border);
+    color: var(--error);
+    padding: 1rem 0;
+    border-radius: 10px;
+}
+.success {
+    margin: 20px 0;
+    text-align: center;
+    background-color: var(--success-bg);
+    border: 1px solid var(--success-border);
+    color: var(--success);
+    padding: 1rem 0;
+    border-radius: 10px;
+}

@@ -21,6 +21,7 @@ root.render(<SettingsProvider>
         <AuthProvider>
           <QueryClientProvider client={queryClient}>
               <App/>
+              <ReactQueryDevtools></ReactQueryDevtools>
           </QueryClientProvider>
         </AuthProvider>
     </SettingsProvider>);

@@ -1,8 +1,9 @@
-import { collection, doc, getDoc, getDocs, addDoc, query, where} from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, addDoc, query, where, updateDoc} from "firebase/firestore";
 import {firestore} from "../../firebase";
 
 const transactionsCollection = collection(firestore, "transactions");
 const categoriesCollection = collection(firestore, "categories");
+const usersCollection = collection(firestore, "users");
 
 // ============================================================
 const getTransactions = async ({year, month}) => {
@@ -65,3 +66,34 @@ const getCategories = async () => {
 
 const categoriesService = {getCategories}
 export { categoriesService };
+// ============================================================
+const addUser = async (user) => {
+    const newUser = {
+        name: user?.name,
+        surname: user?.surname,
+        email: user.email
+    }
+    
+    const newDocRef = await addDoc(usersCollection, newUser);
+    return newDocRef.id;
+}
+
+const getUserInfo = async (email) => {
+    const userRef = doc(firestore, 'users', email);
+    const userSnap = await getDoc(userRef);
+
+    if(userSnap.exists()) {
+        return userSnap.data();
+    } else {
+        throw new Error('No such user!');
+    }
+}
+
+const updateUserInfo = async ({name, surname, email}) => {
+    const userRef = doc(firestore, 'users', email);
+
+    return await updateDoc(userRef, {name, surname})
+    
+}
+const usersService = {addUser, getUserInfo, updateUserInfo}
+export {usersService}

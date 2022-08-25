@@ -5,9 +5,13 @@
     --text-primary: #fff;
     --text-secondary: #fff;
     --border: #ccc;
-    --success: #03dac6;
+    --success: #0f5132;
     --error: #b00020;
     --category-color: #3700b3;
+    --success-bg: #d1e7dd;
+    --success-border: #0f5132;
+    --error-bg: #f8d7da;
+    --error-border: #f5c2c7;
     --header-color: #121212;
     --window-color: #121212;
     --window-color-light: #333;

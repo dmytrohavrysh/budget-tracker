@@ -1,11 +1,13 @@
 import { useRef, useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import {useNavigate} from 'react-router-dom';
+import Alert from '../../components/Alert';
 import styles from './Login.module.css';
 
 function Login() {
     const [displayedForm, setDisplayedForm] = useState('Log In');
     const [error, setError] = useState();
+    const [success, setSuccess] = useState();
     const [isLoading, setIsLoading] = useState(false);
     const changeLocation = useNavigate();
 
@@ -15,7 +17,7 @@ function Login() {
     const newPasswordRef = useRef();
     const confirmPasswordRef = useRef();
     const resetEmailRef = useRef();
-    const {signUp, login} = useAuth();
+    const {signUp, login, resetPassword} = useAuth();
 
     const switchForm = (e) => {
         setDisplayedForm(e.target.textContent)
@@ -35,28 +37,42 @@ function Login() {
             await signUp(newEmailRef.current.value, newPasswordRef.current.value);
             changeLocation('/');
         } catch(e) {
-            setError(e.message.slice(e.message.indexOf(' ') + 1))
+            setError(e.message.slice(e.message.indexOf(' ') + 1, e.message.indexOf('(')))
         } finally {
             setIsLoading(false);
-        }
-
-
-        
+        }    
     }
+
     const handleLogin = async (e) => {
         setError('');
-        e.preventDefault();
-        
+        e.preventDefault();        
         try {
             setIsLoading(true);
             await login(emailRef.current.value, passwordRef.current.value);
-            changeLocation('/');
+            changeLocation('/account');
         } catch(e) {
             setError('Email and/or password are incorrect')
         } finally {
             setIsLoading(false);
         }
+    }
 
+    const handleReset = async (e) => {
+        e.preventDefault();        
+        try {
+            setIsLoading(true);
+            await resetPassword(resetEmailRef.current.value);
+            setSuccess('Password reset email sent!')
+        } catch(e) {
+            switch(e.code) {
+                case 'user-not-found': setError('User with this email is not registered');break;
+                case 'auth/invalid-email': setError('Invalid email');break;
+                default: setError('Something went wrong...')
+            }
+            
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     return (
@@ -103,7 +119,7 @@ function Login() {
             </form>
             <p>Already have an account? <button onClick={switchForm} className={styles.link}>Log In</button></p>
             </> : <> 
-            <form className={styles.form}>
+            <form className={styles.form} onSubmit={handleReset}>
                 <div className={styles.form__header}>
                     <h2 className={styles.form__heading}>Reset Password</h2>
                 </div>
@@ -118,7 +134,11 @@ function Login() {
             </form>
             </>}
             {error ?
-                <div className={styles.error}>{error}</div>
+                <Alert type={'error'}>{error}</Alert>
+                : null
+            }
+            {success ?
+                <Alert type={'success'}>{success}</Alert>
                 : null
             }
         </div>
