@@ -4,6 +4,7 @@ import {useQuery} from '@tanstack/react-query';
 import {getTransactions} from '../../providers/services/Storage';
 import StatisticMonthView from '../StatisticMonthView';
 import { useAuth } from '../../hooks/useAuth';
+import StatisticChartView from '../StatisticChartView';
 
 const groupBy = (transactions, key) => {
     return transactions.reduce((result, x) => {
@@ -23,6 +24,7 @@ const extractCategories = (transactions) => {
 
 function StatisticMonthComparator({ month1, year1, month2, year2 }) {
     const {currUser} = useAuth();
+    const [statType, setStatType] = useState('transactions')
     const [date1, setDate1] = useState({month: month1, year: year1})
     const [date2, setDate2] = useState({month: month2, year: year2})
     const [originalTransactions1, setOriginalTransactions1] = useState([]);
@@ -65,6 +67,11 @@ function StatisticMonthComparator({ month1, year1, month2, year2 }) {
             setDate2({year, month});
         }
     }
+        
+    const changeType = (e) => {
+        setStatType(e.target.dataset.type)
+    }
+
 
     function processCategories() {
         if(leftTransactions.isSuccess && leftTransactions.isFetched && rightTransactions.isSuccess && rightTransactions.isFetched) {
@@ -92,7 +99,12 @@ function StatisticMonthComparator({ month1, year1, month2, year2 }) {
         }
     }
     
-    return ( 
+    return (<>
+        <fieldset className={styles.fieldset}>
+            <legend className={styles.legend}>Type:</legend>
+            <label className={styles.label}>Chart: <input type={'radio'} defaultChecked={true} data-type='chart' name={'statistic__type'} onChange={changeType}/></label>
+            <label className={styles.label}>List: <input type={'radio'} data-type='list' name={'statistic__type'} onChange={changeType}/></label>
+        </fieldset>
         <div className={styles.comparator}>
         {isDataProcessed ? 
             <>
@@ -101,19 +113,28 @@ function StatisticMonthComparator({ month1, year1, month2, year2 }) {
                     <input type="month" data-location="left" className={styles.comparator__month} pattern="[0-9]{4}-[0-9]{2}" onChange={changeDate} defaultValue={`${date1.year}-${(date1.month+1) > 9 ? date1.month+1 : '0'+(date1.month+1)}`}/>
                     
                     <div className={styles.comparator__body}> 
-                        <StatisticMonthView originalTransactions={originalTransactions1} modTransactions={modTransactions1}/>
+                        {statType === 'list' ? 
+                            <StatisticMonthView originalTransactions={originalTransactions1} modTransactions={modTransactions1}/>
+                        :
+                            <StatisticChartView originalTransactions={originalTransactions1} modTransactions={modTransactions1}/>                    
+                        }
+                        
                     </div>  
                 </div> 
             
                 <div className={styles.right}>
                     <input type="month" data-location="right" className={styles.comparator__month} pattern="[0-9]{4}-[0-9]{2}" onChange={changeDate} defaultValue={`${date2.year}-${(date2.month+1) > 9 ? date2.month+1 : '0'+(date2.month+1)}`}/>
                     <div className={styles.comparator__body}> 
+                    {statType === 'list' ? 
                         <StatisticMonthView originalTransactions={originalTransactions2} modTransactions={modTransactions2} />
+                        :
+                        <StatisticChartView originalTransactions={originalTransactions2} modTransactions={modTransactions2} />
+                    }
                     </div>
                 </div>
             </>
             : null}
         </div>
-        );
+        </>);
     }
     export default StatisticMonthComparator;

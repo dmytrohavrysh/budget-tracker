@@ -39,7 +39,6 @@ const AddTransactionModal = ({addTransaction: addTransactionLocal, isModalOpen, 
    
 
     const addTransaction = async (e) => {
-        debugger
         e.preventDefault();
         addTransactionLocal(formData);
         closeModal();

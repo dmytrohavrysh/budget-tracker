@@ -24,8 +24,9 @@ function StatisticMonthView({originalTransactions, modTransactions}) {
             })
         }
         </div>
-        {selectedCat !== null &&
+        {selectedCat && <>
          
+        <h2 className={styles.details__heading}>{selectedCat}</h2>
         <div className={styles.details}>
          {      
             originalTransactions.filter(el => el.category === selectedCat).sort((a, b) => a.date - b.date).map(el => {
@@ -37,6 +38,7 @@ function StatisticMonthView({originalTransactions, modTransactions}) {
             })
         }
         </div>
+        </>
         }        
     </>
 }

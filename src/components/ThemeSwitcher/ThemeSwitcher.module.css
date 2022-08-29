@@ -15,8 +15,9 @@
     filter: invert(1);
     border: none;
     border-radius: 10px;
-    font-size: 0.875rem;
-    padding: 10px;
+    font-size: 0;
+    overflow: hidden;
+    padding: 22px 0;
     padding-left: 40px;
     outline: none;
     cursor: pointer;

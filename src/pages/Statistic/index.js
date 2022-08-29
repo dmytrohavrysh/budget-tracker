@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Error } from '../../components/Error';
 import StatisticMonthComparator from '../../components/StatisticMonthComparator';
 import { useAuth } from '../../hooks/useAuth';
@@ -9,6 +10,7 @@ const Statistic = () => {
     const {currUser} = useAuth();
     const prevYear = currMonth > 0 ? currYear : currYear - 1;
     const prevMonth = currMonth === 0 ? 11 : currMonth - 1;
+
     return (<>
             {currUser?.emailVerified ?
             <StatisticMonthComparator year1={currYear} month1={currMonth} year2={prevYear} month2={prevMonth}/>

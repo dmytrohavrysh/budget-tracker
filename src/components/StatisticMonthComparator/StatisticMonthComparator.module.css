@@ -1,9 +1,23 @@
 .comparator {
     display: flex;
     gap: 20px;
+    flex-direction: column;
 }
 .left, .right {
-    width: 50%;
+    width: 100%;
+}
+.legend {
+    font-weight: bold;
+    padding: 0 10px;
+}
+.fieldset {
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+    border: 4px solid var(--border);
+    padding: 15px;
+}
+.label {
+    margin-right: 20px;
 }
 .comparator__month {
     position: relative;
@@ -31,4 +45,13 @@
 }
 .comparator__body {
     box-sizing: border-box;
+}
+
+@media (min-width: 580px) {
+    .comparator {
+        flex-direction: row;
+    }
+    .left, .right {
+        width: 50%;
+    }
 }

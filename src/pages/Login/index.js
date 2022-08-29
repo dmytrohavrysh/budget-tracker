@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import {useNavigate} from 'react-router-dom';
 import Alert from '../../components/Alert';
@@ -19,6 +19,12 @@ function Login() {
     const confirmPasswordRef = useRef();
     const resetEmailRef = useRef();
     const {signUp, login, resetPassword, currUser} = useAuth();
+
+    useEffect(() => {
+        if(currUser.emailVerified) {
+            changeLocation('/')
+        }
+    }, [])
 
     const switchForm = (e) => {
         setDisplayedForm(e.target.textContent)

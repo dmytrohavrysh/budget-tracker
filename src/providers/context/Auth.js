@@ -19,6 +19,9 @@ function AuthProvider({children}) {
     useEffect(() => {
         setIsLoading(true);
         const unsubscribe = onAuthStateChanged(auth, async user => { 
+            if(!isLoading && user && !user.emailVerified) {
+                await verifyEmail(currUser);
+            }
             setCurrUser(user)
             setDisplayUser(user ? {email: user.email, displayName: user.displayName} : null)
             setIsLoading(false);
@@ -28,9 +31,6 @@ function AuthProvider({children}) {
 
     const signUp = async (email, password) => {
         const result = await createUserWithEmailAndPassword(auth, email, password);
-        if(currUser && !currUser.emailVerified) {
-            await verifyEmail(currUser);
-        }
         return result
     }
 
