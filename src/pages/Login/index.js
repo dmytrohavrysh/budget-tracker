@@ -21,10 +21,10 @@ function Login() {
     const {signUp, login, resetPassword, currUser} = useAuth();
 
     useEffect(() => {
-        if(currUser.emailVerified) {
+        if(currUser?.emailVerified) {
             changeLocation('/')
         }
-    }, [])
+    }, [changeLocation,currUser])
 
     const switchForm = (e) => {
         setDisplayedForm(e.target.textContent)

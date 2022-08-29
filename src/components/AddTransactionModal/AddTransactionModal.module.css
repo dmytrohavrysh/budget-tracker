@@ -2,6 +2,7 @@
     font-size: 1.5rem;
     font-weight: bold;
     margin-bottom: 1rem;
+    white-space: nowrap;
 }
 
 .overlay {
@@ -25,6 +26,9 @@
     border: 2px solid var(--border);
     border-radius: 4px;
     padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 .legend {
     background: var(--window-color);
@@ -37,14 +41,16 @@
 .label {
     display: flex;
     justify-content: space-between;
+    flex-direction: column;
     align-items: center;
     margin-bottom: 1rem;
     font-weight: bold;
 }
 .control {
-    margin-left: 20px;
-    padding: 8px 15px;
+    padding: 8px 0 8px 8px;
     font-size: inherit;
+    width: 100%;
+    box-sizing: border-box;
 }
 .btn {
     width: 100%;
@@ -70,4 +76,18 @@
 }
 .select {
     text-transform: capitalize;
+}
+
+@media (min-width: 500px) {
+    .label {
+        flex-direction: row;
+    }
+    .fieldset {
+        display: block;
+    }
+    .control {
+        width: auto;
+        padding: 8px 15px;
+        margin-left: 20px;  
+    }
 }

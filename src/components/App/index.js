@@ -19,7 +19,7 @@ const App = () => {
                     <Route exact path='/account' element={<PrivateRoute/>}>
                         <Route exact path="/account" element={<Account />} />
                     </Route>
-                    <Route path="/statistic" element={<PrivateRoute />}>
+                    <Route exact path="/statistic" element={<PrivateRoute />}>
                         <Route path="/statistic" element={<Statistic />} />
                     </Route>
                     <Route path="/login" element={<Login />} />

@@ -1,8 +1,7 @@
 .transaction {
-    display: grid;
-    grid-template: 1fr 1fr / 1fr 1fr 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 10px;
-    align-items: center;
     min-height: 80px;
     margin: 10px 0;
     padding: 30px;
@@ -36,11 +35,9 @@
 }
 .sum {
     grid-area: 2 / 3 / 3 / 4;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
     font-size: 2rem;
     font-weight: bold;
+    white-space: nowrap;
 }
 .income {
     color: var(--success);
@@ -51,4 +48,17 @@
 .icon {
     margin-right: 10px;
     font-size: 0.8em;
+}
+@media (min-width: 600px) {
+    .transaction {
+        display: grid;
+        grid-template: 1fr 1fr / 1fr 1fr 1fr;
+        align-items: center;
+    }
+    .sum {
+        grid-area: 2 / 3 / 3 / 4;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+    }
 }

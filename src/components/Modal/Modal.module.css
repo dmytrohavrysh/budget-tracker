@@ -33,7 +33,7 @@
     min-height: 50px;
     min-width: 50px;
     max-height: 80%;
-    max-width: 80%;
+    max-width: 100%;
     box-shadow: 0 3px 6px var(--shadow-color), 0 3px 6px var(--shadow-color);
     background: var(--window-color);
     border-radius: 10px;
@@ -54,4 +54,10 @@
       opacity: 1;
       transition-delay: 150ms;
       transition-duration: 350ms;
+}
+
+@media (min-width: 500px) {
+    .modalContent {
+        max-width: 80%;
+    }
 }

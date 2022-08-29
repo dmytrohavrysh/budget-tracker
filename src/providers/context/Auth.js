@@ -6,7 +6,7 @@ import { updateProfile as firebaseUpdateProfile,
     signOut,
     sendEmailVerification
  } from 'firebase/auth';
-import React, { createContext, useEffect, useState } from 'react'
+import React, { createContext, useEffect, useRef, useState } from 'react'
 import { auth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword } from '../../firebase';
 
 const AuthContext = createContext();
@@ -15,22 +15,24 @@ function AuthProvider({children}) {
     const [currUser, setCurrUser] = useState();
     const [displayUser, setDisplayUser] = useState();
     const [isLoading, setIsLoading] = useState(true);
+    let loadedUser = useRef()
 
     useEffect(() => {
         setIsLoading(true);
-        const unsubscribe = onAuthStateChanged(auth, async user => { 
-            if(!isLoading && user && !user.emailVerified) {
-                await verifyEmail(currUser);
-            }
+        const unsubscribe = onAuthStateChanged(auth, async user => {
             setCurrUser(user)
             setDisplayUser(user ? {email: user.email, displayName: user.displayName} : null)
             setIsLoading(false);
+            loadedUser.current = user
         })
         return unsubscribe;
     }, [])
 
     const signUp = async (email, password) => {
         const result = await createUserWithEmailAndPassword(auth, email, password);
+        if(loadedUser.current) {
+            verifyEmail(loadedUser.current);
+        }
         return result
     }
 

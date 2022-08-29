@@ -2,7 +2,7 @@
     text-align: center;
 }
 .form {
-    width: 60%;
+    width: 100%;
     margin: 0 auto 20px;
     border-radius: 10px;
     box-shadow: 0 0 5px var(--border);
@@ -55,6 +55,7 @@
     border: none;
     border-bottom: 2px solid var(--border);
     background-color: var(--window-color);
+    color: var(--text-primary);
     padding: 10px 0;
     font-size: 1rem;
 }
@@ -67,4 +68,10 @@
     border: none;
     font-size: 1rem;
     color: var(--button-color);
+}
+
+@media (min-width: 768px) {
+    .form {
+        width: 60%;
+    }
 }
