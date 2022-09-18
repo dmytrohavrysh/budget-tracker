@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Error } from '../../components/Error';
 import StatisticMonthComparator from '../../components/StatisticMonthComparator';
 import { useAuth } from '../../hooks/useAuth';

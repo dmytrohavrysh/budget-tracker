@@ -11,7 +11,7 @@ import Welcome from "../../pages/Welcome";
 const App = () => {
     
     return (
-        <Router basename='/projects/budget-diary/'>
+        <Router basename='/'>
               <Header />
               <div className="wrapper">
                   <Routes>

@@ -3,7 +3,7 @@
     "background_color": "#357af6",
     "display": "standalone",
     "scope": "/",
-    "start_url": "/projects/budget-diary",
+    "start_url": "/",
     "name": "Budget Diary App",
     "short_name": "Budget Diary",
     "icons": [
