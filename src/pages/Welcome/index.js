@@ -1,6 +1,8 @@
 import styles from './Welcome.module.css';
+import { Link } from 'react-router-dom';
 
 export default function Welcome() {
+  
   return (
     <div className={styles.container}>
       <h1 className={styles.heading1}>This is the best app to track your monthly expenses!</h1>
@@ -12,7 +14,7 @@ export default function Welcome() {
         <li className={styles.list__item}>And much more!</li>
       </ul>
       <p className={styles.text}>And of course, you can easily install it on your smartphone/laptop or any other device!</p>
-      <p className={styles.text}><a href="/login" className={styles.link}>Sign up</a> and start using BudgetDiary right now</p>
+      <p className={styles.text}><Link to="/login" className={styles.link}>Sign up</Link> and start using BudgetDiary right now</p>
     </div>
   )
 }
