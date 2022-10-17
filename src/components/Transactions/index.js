@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState } from 'react';
+import { lazy, Suspense, useContext, useState } from 'react';
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import styles from "./Transactions.module.css";
 import Transaction from "../Transaction/index"
@@ -8,11 +8,13 @@ import useModal from '../../hooks/useModal';
 import { Loader } from '../Loader';
 import { Error } from '../Error';
 import { useAuth } from '../../hooks/useAuth';
+import { SettingsContext } from '../../providers/context/Settings';
 const AddTransactionModal = lazy(() => import('../../components/AddTransactionModal'));
 
 
 const Transactions = () => {
     const {currUser} = useAuth();
+    const {settingsState} = useContext(SettingsContext);
     const [isModalOpen, openModal, closeModal, isLocked ] = useModal();
     const queryClient = useQueryClient()
     const [date, setDate] = useState({year: new Date().getFullYear(), month: new Date().getMonth()});
@@ -51,7 +53,13 @@ const Transactions = () => {
     
     return (
         <>
-        <DateSelector changedDate={changedDate} />
+            <DateSelector changedDate={changedDate} />
+            
+            <button className={`${styles.add} btn`} onClick={openModal}>Add Transaction</button>
+            <div className={styles.total}>
+                <h3 className={styles.total__heading}>Total:</h3>
+                <p className={styles.total__sum}>{Math.round(transactions?.data?.reduce((acc, next) => acc + next.sum, 0)*100) / 100} {settingsState.currency}</p>
+            </div>
         
         { transactions.isLoading || transactions.fetchStatus === 'fetching'? 
             <Loader />
@@ -62,7 +70,7 @@ const Transactions = () => {
                 <div className={styles.transactions}>
                 {transactions?.data?.map((data, i) => <Transaction key={i} sum={data.sum} category={data.category} currency={data.currency} from={data.from} date={data.date}/>)}
                 </div>
-                <button className={`${styles.add} btn`} onClick={openModal}>Add Transaction</button>
+                
             </>
         }
 

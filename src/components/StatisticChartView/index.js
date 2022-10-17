@@ -31,13 +31,20 @@ export default function StatisticChartView({originalTransactions, modTransaction
                         }]
                     },
                     columnWidth: '80%',
+                    dataLabels: {
+                        position: 'top'
+                    }
                 }
             },
             dataLabels: {
                 enabled: true,
                 formatter: function (val) {
                     return `${val} ${settingsState.currency}`;
-                }
+                },
+                style: {
+                    colors: [settingsState.theme === 'light'? '#000' : '#fff']
+                },
+                offsetY: -20
             },theme: {
                 mode: settingsState.theme
             },

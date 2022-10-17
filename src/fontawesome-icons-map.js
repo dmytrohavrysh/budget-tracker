@@ -1,5 +1,5 @@
 import {faHandHoldingDollar, faUtensils, faGift, faQuestion, faShuttleVan, faTheaterMasks,
-    faTshirt, faShoppingBag, faSchool, faHospital, faHome, faPlane, faGraduationCap} from '@fortawesome/free-solid-svg-icons';
+    faTshirt, faShoppingBag, faSchool, faHospital, faHome, faPlane, faGraduationCap, faMugSaucer, faPhoneFlip} from '@fortawesome/free-solid-svg-icons';
 
 const categoryIcons = {
     'salary': faHandHoldingDollar,
@@ -14,7 +14,9 @@ const categoryIcons = {
     'health': faHospital,
     'home': faHome,
     'travel': faPlane,
-    'training': faGraduationCap
+    'training': faGraduationCap,
+    'caffe': faMugSaucer,
+    'сommunication': faPhoneFlip
 }
 
 export default categoryIcons;
